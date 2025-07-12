@@ -19,10 +19,12 @@ const Notifications = () => {
         setLoading(true);
       }
       
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/notifications/${user._id}`,
-        { withCredentials: true }
-      );
+      
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/notifications`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
       setNotifications(data);
     } catch (error) {
       console.error("❌ Failed to fetch notifications:", error.response?.data || error.message);
