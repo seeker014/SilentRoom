@@ -32,7 +32,7 @@ const CreatePost = () => {
         }
       );
       console.log('Post created:', res.data);
-      navigate('/'); // redirect to home
+      navigate('/home'); // redirect to home
     } catch (error) {
       console.error('Error creating post:', error);
       alert('Error creating post. Check console for details.');
