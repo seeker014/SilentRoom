@@ -10,7 +10,7 @@ import CreatePost from './pages/CreatePost';
 import AdminDashboard from "./pages/AdminDashboard";
 import MyPosts from "./pages/MyPosts";
 import SinglePost from "./pages/SinglePost";
-import { useAuth } from "./context/authContext";
+import { useAuth } from "./context/AuthContext";
 import Messages from "./pages/Messages";
 import LandingPage from "./pages/LandingPage";
 
