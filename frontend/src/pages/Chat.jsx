@@ -28,29 +28,44 @@ const Chat = () => {
         if (!currentUserId || !chatPartnerId) return;
 
         const fetchPartnerNickname = async () => {
-            try {
-                const { data } = await axios.get(
-                    `${import.meta.env.VITE_SERVER_URL}/api/auth/user/${chatPartnerId}`,
-                    { withCredentials: true }
-                );
-                setPartnerNickname(data.nickname);
-            } catch (error) {
-                console.error("Failed to fetch partner nickname:", error);
-                setPartnerNickname("Unknown User");
+    try {
+        const token = localStorage.getItem('token');
+
+        const { data } = await axios.get(
+            `${import.meta.env.VITE_SERVER_URL}/api/auth/user/${chatPartnerId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             }
-        };
+        );
+        setPartnerNickname(data.nickname);
+    } catch (error) {
+        console.error("Failed to fetch partner nickname:", error);
+        setPartnerNickname("Unknown User");
+    }
+};
+
 
         const fetchMessages = async () => {
-            try {
-                const { data } = await axios.get(
-                    `${import.meta.env.VITE_SERVER_URL}/api/chats/${chatPartnerId}`,
-                    { withCredentials: true }
-                );
-                setMessages(data);
-            } catch (error) {
-                console.error("Failed to fetch messages:", error);
+    try {
+        const token = localStorage.getItem('token');
+
+        const { data } = await axios.get(
+            `${import.meta.env.VITE_SERVER_URL}/api/chats/${chatPartnerId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             }
-        };
+        );
+
+        setMessages(data);
+    } catch (error) {
+        console.error("Failed to fetch messages:", error);
+    }
+};
+
 
         fetchPartnerNickname();
         fetchMessages();

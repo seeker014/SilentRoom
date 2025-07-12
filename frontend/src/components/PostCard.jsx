@@ -10,32 +10,57 @@ const PostCard = ({ post, refreshPosts }) => {
     const navigate = useNavigate();
 
     const handleLike = async () => {
-        try {
-            setIsLiked(!isLiked);
-            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/posts/like/${post._id}`, {
-  withCredentials: true});
-            refreshPosts();
-        } catch (error) {
-            console.error(error);
-            setIsLiked(!isLiked); // Revert on error
-        }
-    };
+    try {
+        setIsLiked(!isLiked);
+
+        const token = localStorage.getItem('token');
+
+        await axios.put(
+            `${import.meta.env.VITE_BACKEND_URL}/api/posts/like/${post._id}`,
+            {}, // No body needed here
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        refreshPosts();
+    } catch (error) {
+        console.error(error);
+        setIsLiked(!isLiked); // Revert on error
+    }
+};
+
 
     const handleComment = async (e) => {
-        e.preventDefault();
-        if (!comment.trim()) return;
-        try {
-            setLoading(true);
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/posts/comment/${post._id}`, { comment } , {
-  withCredentials: true});
-            setComment('');
-            refreshPosts();
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    e.preventDefault();
+    if (!comment.trim()) return;
+
+    try {
+        setLoading(true);
+
+        const token = localStorage.getItem('token');
+
+        await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/api/posts/comment/${post._id}`,
+            { comment },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        setComment('');
+        refreshPosts();
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     const handleMessage = () => {
         navigate(`/chat/${post.user._id}`);

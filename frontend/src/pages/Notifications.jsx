@@ -19,8 +19,8 @@ const Notifications = () => {
         setLoading(true);
       }
       
-      
-        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/notifications`, {
+        const token = localStorage.getItem('token');
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/notifications/${user._id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
