@@ -39,20 +39,29 @@ const AdminDashboard = () => {
 
 
     const handleDeletePost = async (postId) => {
-        if (!confirm("Are you sure you want to delete this post?")) return;
+    if (!confirm("Are you sure you want to delete this post?")) return;
 
-        try {
-            await axios.delete(
-                `${import.meta.env.VITE_SERVER_URL}/api/posts/admin/posts/${postId}`,
-                { withCredentials: true }
-            );
-            setPosts((prev) => prev.filter((post) => post._id !== postId));
-            toast.success("Post deleted successfully.");
-        } catch (error) {
-            console.error("❌ Failed to delete post:", error);
-            toast.error("Failed to delete post.");
-        }
-    };
+    try {
+        const token = localStorage.getItem("token");
+
+        await axios.delete(
+            `${import.meta.env.VITE_SERVER_URL}/api/posts/admin/posts/${postId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true,
+            }
+        );
+
+        setPosts((prev) => prev.filter((post) => post._id !== postId));
+        toast.success("Post deleted successfully.");
+    } catch (error) {
+        console.error("❌ Failed to delete post:", error);
+        toast.error("Failed to delete post.");
+    }
+};
+
 
     const sidebarItems = [
         { id: 'home', label: 'Home', icon: Home, action: () => navigate('/home') },
