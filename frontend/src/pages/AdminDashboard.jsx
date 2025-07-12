@@ -13,22 +13,30 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const { data } = await axios.get(
-                    `${import.meta.env.VITE_SERVER_URL}/api/posts/admin/posts`,
-                    { withCredentials: true }
-                );
-                setPosts(data);
-            } catch (error) {
-                console.error("❌ Failed to fetch posts:", error);
-                toast.error("Failed to fetch posts.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPosts();
-    }, []);
+    const fetchPosts = async () => {
+        try {
+            const token = localStorage.getItem("token");
+
+            const { data } = await axios.get(
+                `${import.meta.env.VITE_SERVER_URL}/api/posts/admin/posts`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                }
+            );
+            setPosts(data);
+        } catch (error) {
+            console.error("❌ Failed to fetch posts:", error);
+            toast.error("Failed to fetch posts.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchPosts();
+}, []);
+
 
     const handleDeletePost = async (postId) => {
         if (!confirm("Are you sure you want to delete this post?")) return;

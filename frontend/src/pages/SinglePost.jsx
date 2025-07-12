@@ -11,27 +11,36 @@ const SinglePost = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const { data } = await axios.get(
-                    `${import.meta.env.VITE_SERVER_URL}/api/posts/${postId}`, 
-                    { withCredentials: true }
-                );
-                setPost(data);
-            } catch (error) {
-                console.error('Failed to fetch post:', error);
-                setError('Failed to load post. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchPost = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const token = localStorage.getItem("token");
 
-        if (postId) {
-            fetchPost();
+            const { data } = await axios.get(
+                `${import.meta.env.VITE_SERVER_URL}/api/posts/${postId}`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                }
+            );
+            setPost(data);
+        } catch (error) {
+            console.error('Failed to fetch post:', error);
+            setError('Failed to load post. Please try again.');
+        } finally {
+            setLoading(false);
         }
-    }, [postId]);
+    };
+
+    if (postId) {
+        fetchPost();
+    }
+}, [postId]);
+
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {

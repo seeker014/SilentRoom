@@ -14,29 +14,37 @@ const MyPosts = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchMyPosts = async (isRefresh = false) => {
-    try {
-      if (isRefresh) {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
-
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/posts`,
-        { withCredentials: true }
-      );
-
-      // Filter posts belonging to the logged-in user
-      const myPosts = data.filter((post) => post.user._id === user._id);
-      setPosts(myPosts);
-    } catch (error) {
-      console.error("❌ Failed to fetch posts:", error);
-      toast.error("Failed to fetch your posts.");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
+  try {
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
     }
-  };
+
+    const token = localStorage.getItem("token");
+
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/api/posts`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    // Filter posts belonging to the logged-in user
+    const myPosts = data.filter((post) => post.user._id === user._id);
+    setPosts(myPosts);
+  } catch (error) {
+    console.error("❌ Failed to fetch posts:", error);
+    toast.error("Failed to fetch your posts.");
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
+
 
   useEffect(() => {
     if (user?._id) {
