@@ -16,7 +16,10 @@ const PostFeed = () => {
                 setLoading(true);
             }
             
-            const { data } = await axios.get('/api/posts');
+            const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/posts`, {
+  withCredentials: true,
+});
+
             setPosts(data);
         } catch (error) {
             console.error('Failed to fetch posts:', error);

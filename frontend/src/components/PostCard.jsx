@@ -12,7 +12,8 @@ const PostCard = ({ post, refreshPosts }) => {
     const handleLike = async () => {
         try {
             setIsLiked(!isLiked);
-            await axios.put(`/api/posts/like/${post._id}`);
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/posts/like/${post._id}`, {
+  withCredentials: true});
             refreshPosts();
         } catch (error) {
             console.error(error);
@@ -25,7 +26,8 @@ const PostCard = ({ post, refreshPosts }) => {
         if (!comment.trim()) return;
         try {
             setLoading(true);
-            await axios.post(`/api/posts/comment/${post._id}`, { comment });
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/posts/comment/${post._id}`, { comment } , {
+  withCredentials: true});
             setComment('');
             refreshPosts();
         } catch (error) {
