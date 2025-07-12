@@ -9,25 +9,29 @@ const PostFeed = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const fetchPosts = async (isRefresh = false) => {
-        try {
-            if (isRefresh) {
-                setRefreshing(true);
-            } else {
-                setLoading(true);
-            }
-            
-            const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/posts`, {
-  withCredentials: true,
-});
-
-            setPosts(data);
-        } catch (error) {
-            console.error('Failed to fetch posts:', error);
-        } finally {
-            setLoading(false);
-            setRefreshing(false);
+    try {
+        if (isRefresh) {
+            setRefreshing(true);
+        } else {
+            setLoading(true);
         }
-    };
+
+        const token = localStorage.getItem('token'); // get token from localStorage
+
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/posts`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setPosts(data);
+    } catch (error) {
+        console.error('Failed to fetch posts:', error);
+    } finally {
+        setLoading(false);
+        setRefreshing(false);
+    }
+};
+
 
     const handleRefresh = () => {
         fetchPosts(true);
